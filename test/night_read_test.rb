@@ -32,4 +32,12 @@ class NightReadTest < Minitest::Test
     assert_equal "j", letters_to_numbers.key("0")
   end
 
+  def test_file_input_output
+    # check that this is a string
+    # check that string isn't empty
+    # check that an output file is created l
+  end
+
+binding.pry
+
 end
