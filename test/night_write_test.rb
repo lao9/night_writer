@@ -1,13 +1,13 @@
 require "minitest"
 require "minitest/pride"
 require "minitest/autorun"
-require "../night_writer/lib/night_write"
+require "../night_writer/lib/night_write_class"
 
 class NightWriteTest < Minitest::Test
   attr_reader :braille_write
 
   def setup
-    @braille_write = NightWrite.new
+    @braille_write = NightWrite.new(load_english_file_1)
   end
 
 
@@ -34,4 +34,35 @@ class NightWriteTest < Minitest::Test
     assert_equal "f", alphabet_hash.key(["00","0.",".."])
     assert_equal "j", letters_to_numbers.key("0")
   end
+
+  def load_english_file_1
+    File.open("test/english.txt", "r").read
+  end
+
+  def test_input_file
+    assert_equal String, braille_write.file_input.class
+    refute braille_write.file_input.empty?
+  end
+
+  def test_message_string_split_to_array
+      assert_equal String, braille_write.file_input.class
+      assert_equal Array, braille_write.english_array.class
+
+  end
+
+  def test_capitalizer
+    assert_equal [".0","00",".0"], alphabet_hash["w"]
+    assert_equal ["..","0.","00"], alphabet_hash["?"]
+    assert_equal "7", letters_to_numbers["g"]
+    assert_equal "t", alphabet_hash.key([".0","00","0."])
+    assert_equal "f", alphabet_hash.key(["00","0.",".."])
+    assert_equal "j", letters_to_numbers.key("0")
+  end
+
+#For *each* character:
+# Is the character capitalized?
+# If yes: Insert capital symbol into our “translation builder” method
+
+
+
 end
