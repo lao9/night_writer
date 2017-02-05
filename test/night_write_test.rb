@@ -50,13 +50,9 @@ class NightWriteTest < Minitest::Test
 
   end
 
-  def test_capitalizer
-    assert_equal [".0","00",".0"], alphabet_hash["w"]
-    assert_equal ["..","0.","00"], alphabet_hash["?"]
-    assert_equal "7", letters_to_numbers["g"]
-    assert_equal "t", alphabet_hash.key([".0","00","0."])
-    assert_equal "f", alphabet_hash.key(["00","0.",".."])
-    assert_equal "j", letters_to_numbers.key("0")
+  def test_character_orientation
+    
+
   end
 
 #For *each* character:
