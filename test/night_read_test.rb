@@ -7,7 +7,7 @@ require "pry"
 class NightReadTest < Minitest::Test
   attr_reader :btext
   def setup
-    @btext = NightRead.new
+    @btext = NightRead.new(load_braille_file_1)
   end
 
   def test_default_variables
@@ -32,12 +32,38 @@ class NightReadTest < Minitest::Test
     assert_equal "j", letters_to_numbers.key("0")
   end
 
-  def test_file_input_output
-    # check that this is a string
-    # check that string isn't empty
-    # check that an output file is created l
+  def test_file_input
+    assert_equal String, btext.file_input.class
+    refute btext.file_input.empty?
   end
 
-binding.pry
+  def test_line_creation
+    btext.loop_through_braille_lines(btext.file_input)
+    assert btext.line_array.empty?, "Looks like we still have some things in our line array."
+    assert_equal "00..00..0.", btext.line1
+    assert_equal ".....0...0", btext.line2
+    assert_equal "00.000.000", btext.line3
+  end
+
+  def test_one_character_builder
+    btext1 = NightRead.new(load_small_braille_file)
+    btext1.loop_through_braille_lines(btext1.file_input)
+  end
+
+  def test_capital_character_builder
+    skip
+  end
+
+  def test_number_character_builder
+    skip
+  end
+
+  def load_braille_file_1
+    File.open("test/braille.txt", "r").read
+  end
+
+  def load_small_braille_file
+    File.open("test/braille_small_input_test1.txt").read
+  end
 
 end
