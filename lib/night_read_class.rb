@@ -50,9 +50,12 @@ class NightRead
     elsif alphabet_hash.key(character) == " "
       @number_bool = false
     else
-
+      insert_into_translation_builder
     end
 
+  end
+
+  def insert_into_translation_builder
     if @number_bool
       translation_builder(letters_to_numbers[alphabet_hash.key(character)])
     elsif @capital_bool
@@ -61,7 +64,6 @@ class NightRead
     else
       translation_builder(alphabet_hash.key(character))
     end
-
   end
 
   def translation_builder(letter)
