@@ -1,9 +1,9 @@
 require "../night_writer/lib/hash_library"
 require "pry"
-#
+
 class NightRead
   attr_reader :file_input
-  attr_accessor :capital_bool, :number_bool, :normal_line, :line_array, :line1, :line2, :line3, :file_output, :test_output
+  attr_accessor :capital_bool, :number_bool, :normal_line, :file_output, :test_output
   def initialize(file_input, file_output)
     @capital_bool = false
     @number_bool = false
@@ -11,25 +11,21 @@ class NightRead
     @file_input = file_input
     @file_output = file_output
     @test_output = ""
-    @line_array = []
-    @line1 = ""
-    @line2 = ""
-    @line3 = ""
   end
 
   def loop_through_braille_lines(braille_string)
 
-    @line_array = braille_string.split("\n") #remove line breaks
+    line_array = braille_string.split("\n") #remove line breaks
 
     until line_array.empty?
-      @line1 = line_array.shift
-      @line2 = line_array.shift
-      @line3 = line_array.shift
-      character_builder(@line1, @line2, @line3)
+      line1 = line_array.shift
+      line2 = line_array.shift
+      line3 = line_array.shift
+      character_builder(line1, line2, line3)
     end
 
     write_message_to_file
-
+    return line_array, line1, line2, line3
   end
 
   def character_builder(line1, line2, line3)
@@ -40,6 +36,7 @@ class NightRead
       line3 = line3[2..-1]
       capital_number_checker(braille_char)
     end
+    return braille_char, line1, line2, line3
   end
 
   def capital_number_checker(character)
@@ -59,11 +56,14 @@ class NightRead
   def insert_into_translation_builder(character)
     if @number_bool
       translation_builder(letters_to_numbers[alphabet_hash.key(character)])
+      return letters_to_numbers[alphabet_hash.key(character)]
     elsif @capital_bool
       translation_builder(alphabet_hash.key(character).upcase)
       @capital_bool = false
+      return alphabet_hash.key(character).upcase
     else
       translation_builder(alphabet_hash.key(character))
+      return alphabet_hash.key(character)
     end
   end
 
