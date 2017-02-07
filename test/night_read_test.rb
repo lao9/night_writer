@@ -7,7 +7,7 @@ require "pry"
 class NightReadTest < Minitest::Test
   attr_reader :btext
   def setup
-    @btext = NightRead.new(load_braille_file_1)
+    @btext = NightRead.new(load_braille_a, create_sample_txt_output_file("english_translation_test"))
   end
 
   def test_default_variables
@@ -19,7 +19,7 @@ class NightReadTest < Minitest::Test
   def test_that_hashes_load
     refute_nil alphabet_hash
     refute_nil letters_to_numbers
-    assert_equal 34, alphabet_hash.count
+    assert_equal 35, alphabet_hash.count
     assert_equal 10, letters_to_numbers.count
   end
 
@@ -37,33 +37,146 @@ class NightReadTest < Minitest::Test
     refute btext.file_input.empty?
   end
 
-  def test_line_creation
-    btext.loop_through_braille_lines(btext.file_input)
-    assert btext.line_array.empty?, "Looks like we still have some things in our line array."
-    assert_equal "00..00..0.", btext.line1
-    assert_equal ".....0...0", btext.line2
-    assert_equal "00.000.000", btext.line3
-  end
-
   def test_one_character_builder
-    btext1 = NightRead.new(load_small_braille_file)
-    btext1.loop_through_braille_lines(btext1.file_input)
+    @btext.loop_through_braille_lines(@btext.file_input)
+    assert_equal "a", @btext.test_output.chomp
   end
 
-  def test_capital_character_builder
-    skip
+  def test_loop_through_braille
+    sym_test = NightRead.new(load_braille_symbols_letters, create_sample_txt_output_file("english_translation_test4"))
+    line_array, line1, line2, line3 = sym_test.loop_through_braille_lines(sym_test.file_input)
+    assert line_array.empty?, "Looks like we still have some things in our line array."
   end
 
   def test_number_character_builder
-    skip
+    braille_char, line1, line2, line3 = @btext.character_builder("0.0.00", "00...0", "0...00")
+    assert_equal ["00",".0","00"], braille_char
+    braille_char, line1, line2, line3 = @btext.character_builder("0.0.", "00..", "0...")
+    assert_equal ["0.","..",".."], braille_char
+    braille_char, line1, line2, line3 = @btext.character_builder("0.", "00", "0.")
+    assert_equal ["0.","00","0."], braille_char
   end
 
-  def load_braille_file_1
-    File.open("test/braille.txt", "r").read
+  def test_number_detector
+    @btext.capital_number_checker([".0", ".0", "00"])
+    assert @btext.number_bool
   end
 
-  def load_small_braille_file
-    File.open("test/braille_small_input_test1.txt").read
+  def test_capital_detector
+    @btext.capital_number_checker(["..", "..", ".0"])
+    assert @btext.capital_bool
+  end
+
+  def test_space_detector
+    @btext.capital_number_checker([".0", ".0", "00"])
+    assert @btext.number_bool
+    @btext.capital_number_checker(["..","..",".."])
+    refute @btext.number_bool
+  end
+
+  def test_insert_into_translation_builder
+    @btext.capital_number_checker([".0", ".0", "00"])
+    assert @btext.number_bool
+    assert_equal "1", @btext.insert_into_translation_builder(["0.","..",".."])
+    @btext.capital_number_checker(["..","..",".."])
+    refute @btext.number_bool
+    assert_equal "a", @btext.insert_into_translation_builder(["0.","..",".."])
+    @btext.capital_number_checker(["..", "..", ".0"])
+    assert @btext.capital_bool
+    assert_equal "A", @btext.insert_into_translation_builder(["0.","..",".."])
+    assert_equal "v", @btext.insert_into_translation_builder(["0.","0.","00"])
+    assert_equal "!", @btext.insert_into_translation_builder(["..","00","0."])
+  end
+
+  def translation_builder_line_checker
+    79.times {@btext.translation_builder("a")}
+    assert 79, @btext.normal_line.length
+    3.times {@btext.translation_builder("a")}
+    assert 2, @btext.normal_line.length
+    assert 80, @btext.test_output.chomp
+  end
+
+  def test_braille_hello
+    breader = NightRead.new(load_braille_hello, create_sample_txt_output_file("english_translation_test1"))
+    breader.loop_through_braille_lines(breader.file_input)
+    assert_equal "hello", breader.test_output.chomp
+  end
+
+  def test_braille_hello_word
+    breader = NightRead.new(load_braille_hello_word, create_sample_txt_output_file("english_translation_test2"))
+    breader.loop_through_braille_lines(breader.file_input)
+    assert_equal "hello, world!", breader.test_output.chomp
+  end
+
+  def test_braille_hello_word_caps
+    breader = NightRead.new(load_braille_hello_word_caps, create_sample_txt_output_file("english_translation_test3"))
+    breader.loop_through_braille_lines(breader.file_input)
+    assert_equal "Hello, World!", breader.test_output.chomp
+  end
+
+  def test_extra_line_creation
+    sym_test = NightRead.new(load_braille_symbols_letters, create_sample_txt_output_file("english_translation_test4"))
+    line_array, line1, line2, line3 = sym_test.loop_through_braille_lines(sym_test.file_input)
+    assert_equal "00..00..0.", line1
+    assert_equal ".....0...0", line2
+    assert_equal "00.000.000", line3
+  end
+
+  def test_symbols_letters_caps
+    a = " !',-.?abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    breader = NightRead.new(load_braille_symbols_letters, create_sample_txt_output_file("english_translation_test5"))
+    breader.loop_through_braille_lines(breader.file_input)
+    assert_equal a, breader.test_output.chomp
+  end
+
+  def test_braille_numbers
+    a = "123456"
+    breader = NightRead.new(load_braille_numbers, create_sample_txt_output_file("english_translation_test6"))
+    breader.loop_through_braille_lines(breader.file_input)
+    assert_equal a, breader.test_output.chomp
+  end
+
+  def test_braille_hello_word_numbers
+    a = "123456 Hello, world!"
+    breader = NightRead.new(load_braille_hello_word_numbers, create_sample_txt_output_file("english_translation_test7"))
+    breader.loop_through_braille_lines(breader.file_input)
+    assert_equal a, breader.test_output.chomp
+  end
+
+  def load_braille_a
+    File.open("test/test_files/braille_a.txt").read
+  end
+
+  def load_braille_hello
+    File.open("test/test_files/braille_hello.txt", "r").read
+  end
+
+  def load_braille_hello_word
+    File.open("test/test_files/braille_hello_world.txt", "r").read
+  end
+
+  def load_braille_hello_word_caps
+    File.open("test/test_files/braille_hello_world_caps.txt", "r").read
+  end
+
+  def load_braille_symbols_letters
+    File.open("test/test_files/braille_symbols_letters.txt", "r").read
+  end
+
+  def load_braille_numbers
+    File.open("test/test_files/braille_numbers.txt", "r").read
+  end
+
+  def load_braille_hello_word_numbers
+    File.open("test/test_files/braille_hello_world_numbers.txt", "r").read
+  end
+
+  def create_sample_txt_output_file(filename)
+    File.open("test/output_files/#{filename}.txt", "w")
+  end
+
+  def read_sample_txt_output_file(filename)
+    File.open("test/output_files/#{filename}.txt", "r").read
   end
 
 end
