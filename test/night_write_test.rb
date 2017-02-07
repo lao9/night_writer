@@ -10,6 +10,39 @@ class NightWriteTest < Minitest::Test
     @braille_write = NightWrite.new(load_english_file_1)
   end
 
+# vv test text files for loading vv
+  def load_english_file_1
+    File.open("test/english.txt", "r").read
+  end
+
+  def test_input_file
+    assert_equal String, braille_write.file_input.class
+    refute braille_write.file_input.empty?
+  end
+
+  def test_message_string_split_to_array
+      assert_equal String, braille_write.file_input.class
+      assert_equal Array, braille_write.english_array.class
+
+  end
+  def load_english_a
+    File.open("test/test_files/english_a.txt", "r").read
+  end
+
+  def load_english_hello_world.txt
+    File.open("test/test_files/english_hello_world.txt", "r").read
+  end
+
+  def load_english_hello_world_caps.txt
+    File.open("test/test_files/english_hello_world_caps.txt", "r").read
+  end
+
+  def load_english_hello_world_numbers.txt
+      File.open("test/test_files/english_hello_world_numbers.txt", "r").read
+  end
+
+
+#vv actual tests vv
 
   def test_starting_values
     refute braille_write.number_bool
@@ -35,29 +68,29 @@ class NightWriteTest < Minitest::Test
     assert_equal "j", letters_to_numbers.key("0")
   end
 
-  def load_english_file_1
-    File.open("test/english.txt", "r").read
+
+
+# further tests for this feel like just running the night write class itself
+  def test_character_orientation_number
+        load_english_a
+        refute @number_bool == true
   end
 
-  def test_input_file
-    assert_equal String, braille_write.file_input.class
-    refute braille_write.file_input.empty?
-  end
+  def test_translation_builder
+      load_english_hello_world_numbers
+      assert_equal ["0.0.00000.00....0.0.0.0.0....00.0.0.00.."], 
 
-  def test_message_string_split_to_array
-      assert_equal String, braille_write.file_input.class
-      assert_equal Array, braille_write.english_array.class
 
-  end
 
-  def test_character_orientation
-    
+
+
+
+
 
   end
 
-#For *each* character:
-# Is the character capitalized?
-# If yes: Insert capital symbol into our “translation builder” method
+
+
 
 
 
