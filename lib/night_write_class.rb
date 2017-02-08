@@ -3,7 +3,7 @@ require 'pry'
 
 class NightWrite
   attr_reader :file_input
-  attr_accessor :number_bool, :line_1, :line_2, :line_3, :english_array, :braille_file
+  attr_accessor :number_bool, :line_1, :line_2, :line_3, :english_array, :braille_file, :test_output
   def initialize(file_input, braille_file)
     @number_bool = false
     @english_array = []
@@ -12,6 +12,7 @@ class NightWrite
     @line_3 = ""
     @file_input = file_input.chomp
     @braille_file = braille_file
+    @test_output = ""
   end
 
     def message_string_split_to_array
@@ -37,7 +38,7 @@ class NightWrite
           @number_bool = false
           translation_builder(alphabet_hash[character])
           return alphabet_hash[character]
-      elsif character == character.upcase
+      elsif character == character.upcase && symbols[character] == nil
         translation_builder(alphabet_hash["capital"])
         translation_builder(alphabet_hash[character.downcase])
         return alphabet_hash["capital"], alphabet_hash[character.downcase]
@@ -62,7 +63,9 @@ class NightWrite
       braille_file.puts(@line_1)
       braille_file.puts(@line_2)
       braille_file.puts(@line_3)
-
+      @test_output += @line_1
+      @test_output += @line_2
+      @test_output += @line_3
       @line_1 = ""
       @line_2 = ""
       @line_3 = ""
