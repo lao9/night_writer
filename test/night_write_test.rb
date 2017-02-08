@@ -81,18 +81,36 @@ class NightWriteTest < Minitest::Test
     assert_equal "...." , @braille_write.line_3
   end
 
-  def test_write_braille_to_file_caps_characters
-    write = NightWrite.new(load_english_symbols_letters , sample_braille_output_file(3))
-
-    write.message_string_split_to_array
-
-  end
-
   def test_a_integration
     a_test = NightWrite.new(load_english_a , sample_braille_output_file(4))
     a_test.message_string_split_to_array
     a_test.write_final_lines
+    assert_equal "0.....", a_test.test_output
   end
+
+  def test_hello
+    a_test = NightWrite.new(load_english_hello , sample_braille_output_file(5))
+    a_test.message_string_split_to_array
+    a_test.write_final_lines
+    assert_equal "0.0.0.0.0.00.00.0..0....0.0.0.", a_test.test_output
+  end
+
+  def test_hello_world
+    a_test = NightWrite.new("!", sample_braille_output_file(6))
+    a_test.message_string_split_to_array
+    a_test.write_final_lines
+    assert_equal "..000.", a_test.test_output
+  end
+
+  def test_write_braille_to_file_caps_characters
+    write = NightWrite.new(load_english_symbols_letters , sample_braille_output_file(3))
+
+    write.message_string_split_to_array
+    write.write_final_lines
+
+  end
+
+
 
 
 # further tests for this feel like just running the night write class itself
@@ -115,6 +133,10 @@ class NightWriteTest < Minitest::Test
 
   def load_english_a
     File.open("test/test_files/english_a.txt", "r").read
+  end
+
+  def load_english_hello
+    File.open("test/test_files/english_hello.txt", "r").read
   end
 
   def load_english_hello_world
