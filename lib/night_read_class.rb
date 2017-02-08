@@ -2,8 +2,7 @@ require "../night_writer/lib/hash_library"
 require "pry"
 
 class NightRead
-  attr_reader :file_input
-  attr_accessor :capital_bool, :number_bool, :normal_line, :file_output, :test_output
+  attr_reader :file_input, :normal_line, :file_output, :test_output, :number_bool, :capital_bool
   def initialize(file_input, file_output)
     @capital_bool = false
     @number_bool = false
@@ -13,18 +12,15 @@ class NightRead
     @test_output = ""
   end
 
-  def loop_through_braille_lines(braille_string)
-
-    line_array = braille_string.split("\n") #remove line breaks
-
+  def create_lines_of_braille(braille_string)
+    line_array = braille_string.split("\n") # takes out linebreaks
     until line_array.empty?
       line1 = line_array.shift
       line2 = line_array.shift
       line3 = line_array.shift
       character_builder(line1, line2, line3)
     end
-
-    write_message_to_file
+    write_message_to_file # write any remaining lines of length < 80
     return line_array, line1, line2, line3
   end
 
