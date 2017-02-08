@@ -46,39 +46,33 @@ class NightWriteTest < Minitest::Test
   def test_message_string_splits
     a = "hello"
     braille_write_test = NightWrite.new(a , sample_braille_output_file(1))
-
     assert_equal a.length , braille_write_test.message_string_split_to_array.count
-    #could have hardcoded
-    # test message_string_split_to_array
   end
 
   def test_character_orientation_letters_caps
-    assert_equal ["0.","..",".."] ,@braille_write.character_orientation("a")
+    assert_equal ["0.","..",".."], @braille_write.character_orientation("a")
     var = @braille_write.character_orientation("A")
     assert_equal [["..", "..", ".0"], ["0.", "..", ".."]], var
-    assert_equal [["..", "..", ".0"],["00","0.",".."]] , @braille_write.character_orientation("F")
+    assert_equal [["..", "..", ".0"],["00","0.",".."]], @braille_write.character_orientation("F")
   end
 
   def test_character_orientation_numbers
     assert_equal [[".0", ".0", "00"],["0.","..",".."]], @braille_write.character_orientation("1")
     assert @braille_write.number_bool
-
-    assert_equal ["0.","0.",".."] ,  @braille_write.character_orientation("2")
-
-    assert_equal ["..","..",".."] , @braille_write.character_orientation(" ")
-
+    assert_equal ["0.","0.",".."],  @braille_write.character_orientation("2")
+    assert_equal ["..","..",".."], @braille_write.character_orientation(" ")
     refute @braille_write.number_bool
   end
 
   def test_translation_builder_lays_bricks
     @braille_write.translation_builder(["0.","..",".."])
-    assert_equal "0." , @braille_write.line_1
-    assert_equal ".." , @braille_write.line_2
-    assert_equal ".." , @braille_write.line_3
+    assert_equal "0.", @braille_write.line_1
+    assert_equal "..", @braille_write.line_2
+    assert_equal "..", @braille_write.line_3
     @braille_write.translation_builder(["0.","0.",".."])
-    assert_equal "0.0." , @braille_write.line_1
-    assert_equal "..0." , @braille_write.line_2
-    assert_equal "...." , @braille_write.line_3
+    assert_equal "0.0.", @braille_write.line_1
+    assert_equal "..0.", @braille_write.line_2
+    assert_equal "....", @braille_write.line_3
   end
 
   def test_write_english_a
@@ -93,7 +87,6 @@ class NightWriteTest < Minitest::Test
     write.message_string_split_to_array
     write.write_final_lines
     assert_equal "0.0.0.0.0.00.00.0..0....0.0.0.", write.test_output
-
   end
 
   def test_write_english_hello_world
@@ -131,54 +124,29 @@ class NightWriteTest < Minitest::Test
     assert_equal "..............0.0.00000.00000..0.00.0.00000.00000..0.00.0..000000...0...0...00....00..0...000...0....0.00.00000.00..0....0.00.00000.00..0.00...0.0......0.........0.0...00.000....................0.0.0.0.0.0.0.0.0.0.0000.0000000.0...0...0...000..0...00..00..0....0...0..0...0...00..00..0...00..00..0....0...0..0...0....0...0...0..0...00..00..0...00......0........0...0..0...00..00..0...00......0...00.....0...0...0...0...0...0...00..00..00..00..00..00..00..00..00..00..000.000.0.0.000..00..0......0...000.000.000", write.test_output
   end
 
-# further tests for this feel like just running the night write class itself
-  # def test_character_orientation_number
-  #       load_english_a
-  #       refute @number_bool == true
-  # end
-
-  # def test_translation_builder
-  #     assert_equal ["0.0.00000.00....0.0.0.0.0....00.0.0.00.."], translation_builder( load_english_hello_world_numbers)
-  #
-  #
-  #
-  # end
-
-
-
-
   # vv test text files for loading vv
-
   def load_english_a
     File.open("test/test_files/english_a.txt", "r").read
   end
-
   def load_english_hello
     File.open("test/test_files/english_hello.txt", "r").read
   end
-
   def load_english_hello_world
     File.open("test/test_files/english_hello_world.txt", "r").read
   end
-
   def load_english_hello_world_caps
     File.open("test/test_files/english_hello_world_caps.txt", "r").read
   end
-
   def load_english_numbers
       File.open("test/test_files/english_numbers.txt", "r").read
   end
-
   def load_english_hello_world_numbers
       File.open("test/test_files/english_hello_world_numbers.txt", "r").read
   end
-
   def load_english_symbols_letters
     File.open("test/test_files/english_symbols_letters.txt", "r").read
   end
-
   def sample_braille_output_file(file_num)
     File.open("test/output_files/braille_translation#{file_num}.txt","w")
   end
-
 end

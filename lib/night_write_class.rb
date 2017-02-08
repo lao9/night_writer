@@ -2,8 +2,7 @@ require "../night_writer/lib/hash_library"
 require 'pry'
 
 class NightWrite
-  attr_reader :file_input
-  attr_accessor :number_bool, :line_1, :line_2, :line_3, :english_array, :braille_file, :test_output
+  attr_reader :number_bool, :file_input, :line_1, :line_2, :line_3, :english_array, :braille_file, :test_output
   def initialize(file_input, braille_file)
     @number_bool = false
     @english_array = []
@@ -54,10 +53,8 @@ class NightWrite
         @line_3 += braille_array[2]
         if @line_1.length >= 80
             write_braille_to_file
-          # binding.pry
         end
     end
-
 
     def write_braille_to_file
       braille_file.puts(@line_1)
@@ -69,12 +66,9 @@ class NightWrite
       @line_1 = ""
       @line_2 = ""
       @line_3 = ""
-    #Once our each method is complete, we should add the final lines to our program using the “write braille to file” method since in the translation builder, they’re only added once the character limit reaches 80
     end
 
     def write_final_lines
       write_braille_to_file
     end
-
-# binding.pry
 end
