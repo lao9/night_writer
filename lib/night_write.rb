@@ -10,4 +10,4 @@ puts "Created ‘#{ARGV[1]}’ containing #{input_string.length} characters"
 
 test_write = NightWrite.new(input_string, output_file)
 test_write.message_string_split_to_array
-test_write.character_orientation
+test_write.write_final_lines
