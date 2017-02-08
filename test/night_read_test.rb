@@ -143,6 +143,12 @@ class NightReadTest < Minitest::Test
     assert_equal a, breader.test_output.chomp
   end
 
+  def test_backwards
+    a = "0.0.0.0.0........00.0.0.00....\n00.00.0..0..0...00.0000..0..00\n....0.0.0..0.....00.0.0....00.\n"
+    @btext = NightRead.new(a, create_sample_txt_output_file("english_translation_test8"))
+    @btext.loop_through_braille_lines(a)
+  end
+
   def load_braille_a
     File.open("test/test_files/braille_a.txt").read
   end
