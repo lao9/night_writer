@@ -91,27 +91,32 @@ class NightReadTest < Minitest::Test
   def translation_builder_line_checker
     79.times {@btext.translation_builder("a")}
     assert 79, @btext.normal_line.length
+    assert 79, @btext.count
     3.times {@btext.translation_builder("a")}
     assert 2, @btext.normal_line.length
     assert 80, @btext.test_output.chomp
+    assert 82, @btext.count
   end
 
   def test_braille_hello
     breader = NightRead.new(load_braille_hello, create_sample_txt_output_file("english_translation_test1"))
     breader.create_lines_of_braille(breader.file_input)
     assert_equal "hello", breader.test_output.chomp
+    assert 5, breader.count
   end
 
   def test_braille_hello_word
     breader = NightRead.new(load_braille_hello_word, create_sample_txt_output_file("english_translation_test2"))
     breader.create_lines_of_braille(breader.file_input)
     assert_equal "hello, world!", breader.test_output.chomp
+    assert 13, breader.count
   end
 
   def test_braille_hello_word_caps
     breader = NightRead.new(load_braille_hello_word_caps, create_sample_txt_output_file("english_translation_test3"))
     breader.create_lines_of_braille(breader.file_input)
     assert_equal "Hello, World!", breader.test_output.chomp
+    assert 13, breader.count
   end
 
   def test_extra_line_creation
@@ -127,6 +132,7 @@ class NightReadTest < Minitest::Test
     breader = NightRead.new(load_braille_symbols_letters, create_sample_txt_output_file("english_translation_test5"))
     breader.create_lines_of_braille(breader.file_input)
     assert_equal a, breader.test_output.chomp
+    assert 59, breader.count
   end
 
   def test_braille_numbers
@@ -134,6 +140,7 @@ class NightReadTest < Minitest::Test
     breader = NightRead.new(load_braille_numbers, create_sample_txt_output_file("english_translation_test6"))
     breader.create_lines_of_braille(breader.file_input)
     assert_equal a, breader.test_output.chomp
+    assert 6, breader.count
   end
 
   def test_braille_hello_word_numbers
@@ -141,12 +148,7 @@ class NightReadTest < Minitest::Test
     breader = NightRead.new(load_braille_hello_word_numbers, create_sample_txt_output_file("english_translation_test7"))
     breader.create_lines_of_braille(breader.file_input)
     assert_equal a, breader.test_output.chomp
-  end
-
-  def test_backwards
-    a = "0.0.0.0.0........00.0.0.00....\n00.00.0..0..0...00.0000..0..00\n....0.0.0..0.....00.0.0....00.\n"
-    @btext = NightRead.new(a, create_sample_txt_output_file("english_translation_test8"))
-    @btext.create_lines_of_braille(a)
+    assert 20, breader.count
   end
 
   def load_braille_a
@@ -179,10 +181,6 @@ class NightReadTest < Minitest::Test
 
   def create_sample_txt_output_file(filename)
     File.open("test/output_files/#{filename}.txt", "w")
-  end
-
-  def read_sample_txt_output_file(filename)
-    File.open("test/output_files/#{filename}.txt", "r").read
   end
 
 end

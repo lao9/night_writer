@@ -80,6 +80,7 @@ class NightWriteTest < Minitest::Test
     write.message_string_split_to_array
     write.write_final_lines
     assert_equal "0.....", write.test_output
+    assert_equal 1, write.count
   end
 
   def test_write_english_hello
@@ -87,6 +88,7 @@ class NightWriteTest < Minitest::Test
     write.message_string_split_to_array
     write.write_final_lines
     assert_equal "0.0.0.0.0.00.00.0..0....0.0.0.", write.test_output
+    assert_equal 5, write.count
   end
 
   def test_write_english_hello_world
@@ -94,6 +96,7 @@ class NightWriteTest < Minitest::Test
     write.message_string_split_to_array
     write.write_final_lines
     assert_equal "0.0.0.0.0......00.0.0.00..00.00.0..00...00.0000..000....0.0.0......00.0.0...0.", write.test_output
+    assert_equal 13, write.count
   end
 
   def test_write_english_hello_world_caps
@@ -101,6 +104,7 @@ class NightWriteTest < Minitest::Test
     write.message_string_split_to_array
     write.write_final_lines
     assert_equal "..0.0.0.0.0........00.0.0.00....00.00.0..00.....00.0000..000.0....0.0.0......0.00.0.0...0.", write.test_output
+    assert_equal 15, write.count
   end
 
   def test_write_english_numbers
@@ -108,6 +112,7 @@ class NightWriteTest < Minitest::Test
     write.message_string_split_to_array
     write.write_final_lines
     assert_equal ".00.0.00000.00.0..0....0.00.00............", write.test_output
+    assert_equal 7, write.count
   end
 
   def test_write_english_hello_world_numbers
@@ -115,6 +120,7 @@ class NightWriteTest < Minitest::Test
     write.message_string_split_to_array
     write.write_final_lines
     assert_equal ".00.0.00000.00....0.0.0.0.0......00.0.0.00...0..0....0.00.....00.00.0..00...00.0000..00000...............0....0.0.0......00.0.0...0.", write.test_output
+    assert_equal 22, write.count
   end
 
   def test_write_english_symbols_and_letters
@@ -122,6 +128,15 @@ class NightWriteTest < Minitest::Test
     write.message_string_split_to_array
     write.write_final_lines
     assert_equal "..............0.0.00000.00000..0.00.0.00000.00000..0.00.0..000000...0...0...00....00..0...000...0....0.00.00000.00..0....0.00.00000.00..0.00...0.0......0.........0.0...00.000....................0.0.0.0.0.0.0.0.0.0.0000.0000000.0...0...0...000..0...00..00..0....0...0..0...0...00..00..0...00..00..0....0...0..0...0....0...0...0..0...00..00..0...00......0........0...0..0...00..00..0...00......0...00.....0...0...0...0...0...0...00..00..00..00..00..00..00..00..00..00..000.000.0.0.000..00..0......0...000.000.000", write.test_output
+    assert_equal 85, write.count
+  end
+
+  def test_english_line_breaks
+    write = NightWrite.new(load_english_line_break, sample_braille_output_file(9))
+    write.message_string_split_to_array
+    write.write_final_lines
+    assert_equal "..0.0.00...00.0.0.0........00..0.0...0.0..0...00.00.0....0.0.00...0...0..0000.....00.0.0..0000.000.000....00000.0...0.0.......0.0.0..0..000.0000......0.0..0.0...0....00..0.....0...0....00.....0.....0...........0......0..0.........0...0.....0.0.0.0.0.......0.0..0..00...00...000...0.0.0.0...0.00.0....00....00.000...0..00.0...0.0..00.000.00...0.....0..0...0..0..00......0......0.......0...00", write.test_output
+    assert_equal 65, write.count
   end
 
   # vv test text files for loading vv
@@ -145,6 +160,9 @@ class NightWriteTest < Minitest::Test
   end
   def load_english_symbols_letters
     File.open("test/test_files/english_symbols_letters.txt", "r").read
+  end
+  def load_english_line_break
+    File.open("test/test_files/english_line_break.txt", "r").read
   end
   def sample_braille_output_file(file_num)
     File.open("test/output_files/braille_translation#{file_num}.txt","w")
