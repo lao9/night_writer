@@ -2,16 +2,17 @@ require "../night_writer/lib/hash_library"
 require 'pry'
 
 class NightWrite
-  attr_reader :number_bool, :file_input, :line_1, :line_2, :line_3, :english_array, :braille_file, :test_output
+  attr_reader :number_bool, :file_input, :line_1, :line_2, :line_3, :english_array, :braille_file, :test_output, :count
   def initialize(file_input, braille_file)
     @number_bool = false
     @english_array = []
     @line_1 = ""
     @line_2 = ""
     @line_3 = ""
-    @file_input = file_input.chomp
+    @file_input = file_input.chomp.tr("\n", " ")
     @braille_file = braille_file
     @test_output = ""
+    @count = 0
   end
 
     def message_string_split_to_array
@@ -48,6 +49,7 @@ class NightWrite
     end
 
     def translation_builder(braille_array)
+        @count += 1
         @line_1 += braille_array[0]
         @line_2 += braille_array[1]
         @line_3 += braille_array[2]

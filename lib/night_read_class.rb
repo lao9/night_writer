@@ -2,7 +2,7 @@ require "../night_writer/lib/hash_library"
 require "pry"
 
 class NightRead
-  attr_reader :file_input, :normal_line, :file_output, :test_output, :number_bool, :capital_bool
+  attr_reader :file_input, :normal_line, :file_output, :test_output, :number_bool, :capital_bool, :count
   def initialize(file_input, file_output)
     @capital_bool = false
     @number_bool = false
@@ -10,6 +10,7 @@ class NightRead
     @file_input = file_input
     @file_output = file_output
     @test_output = ""
+    @count = 0
   end
 
   def create_lines_of_braille(braille_string)
@@ -65,6 +66,7 @@ class NightRead
 
   def translation_builder(letter)
     @normal_line += letter
+    @count += 1
     if @normal_line.length >= 80
       write_message_to_file
     end
